@@ -9,7 +9,6 @@ export default function Home() {
   const [selectedCategory, setSelectedCategory] = useState('Alle');
   const [kiRecipes, setKiRecipes] = useState<Recipe[]>([]);
   const [manualRecipes, setManualRecipes] = useState<Recipe[]>([]);
-  const [imageErrors, setImageErrors] = useState<Record<string, boolean>>({});
 
   useEffect(() => {
     const savedKi = JSON.parse(localStorage.getItem('savedKiRecipes') || '[]');
@@ -22,15 +21,32 @@ export default function Home() {
 
   const categories = ['Alle', 'Klassiker', 'Suppe', 'Pasta', 'Auflauf', 'Hauptgericht', 'Fisch', 'Salat', 'Vegetarisch', 'Dessert', 'Backen'];
 
+  // Intelligente Funktion: Erkennt anhand des Namens / der Kategorie das perfekte Foto
+  const getSmartImageUrl = (recipe: Recipe) => {
+    const text = (recipe.title + ' ' + (recipe.category || '')).toLowerCase();
+
+    if (text.includes('suppe') || text.includes('soup')) return 'https://images.unsplash.com/photo-1547592166-23ac45744acd?w=600';
+    if (text.includes('kuchen') || text.includes('torte') || text.includes('backen') || text.includes('brownie') || text.includes('muffin')) return 'https://images.unsplash.com/photo-1606313564200-e75d5e30476c?w=600';
+    if (text.includes('pasta') || text.includes('spaghetti') || text.includes('nudel') || text.includes('penne')) return 'https://images.unsplash.com/photo-1621996346565-e3d5d6281229?w=600';
+    if (text.includes('pizza')) return 'https://images.unsplash.com/photo-1513104890138-7c749659a591?w=600';
+    if (text.includes('eis') || text.includes('dessert') || text.includes('süß') || text.includes('tiramisu')) return 'https://images.unsplash.com/photo-1488477181946-6428a0291777?w=600';
+    if (text.includes('risotto') || text.includes('reis')) return 'https://images.unsplash.com/photo-1633964913295-ceb43826e7c9?w=600';
+    if (text.includes('curry')) return 'https://images.unsplash.com/photo-1455619452474-d2be8b1e70cd?w=600';
+    if (text.includes('gulasch') || text.includes('fleisch') || text.includes('braten') || text.includes('steak')) return 'https://images.unsplash.com/photo-1534939561126-855b8675edd7?w=600';
+    if (text.includes('salat') || text.includes('brokkoli')) return 'https://images.unsplash.com/photo-1540420773420-3366772f4999?w=600';
+    if (text.includes('fisch') || text.includes('lachs')) return 'https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?w=600';
+
+    // Falls ein Bild angegeben wurde und valide ist, nutze es, ansonsten ein schönes Standard-Kochbild
+    return recipe.image_url && recipe.image_url.startsWith('http') 
+      ? recipe.image_url 
+      : 'https://images.unsplash.com/photo-1498837167922-ddd27525d352?w=600';
+  };
+
   const filteredRecipes = combinedRecipes.filter((recipe) => {
     const matchesSearch = recipe.title.toLowerCase().includes(search.toLowerCase());
     const matchesCategory = selectedCategory === 'Alle' || recipe.category === selectedCategory;
     return matchesSearch && matchesCategory;
   });
-
-  const handleImageError = (id: string) => {
-    setImageErrors(prev => ({ ...prev, [id]: true }));
-  };
 
   return (
     <main className="min-h-screen bg-[#FAFAFC] text-slate-900 selection:bg-slate-900 selection:text-white pb-32">
@@ -131,7 +147,7 @@ export default function Home() {
               const isManual = manualRecipes.some((m) => m.id === recipe.id);
               const isKi = kiRecipes.some((k) => k.id === recipe.id);
               const badgeText = isManual ? '✍️ Manuell' : isKi ? '⭐ Gespeichert' : (recipe.category || 'Rezept');
-              const hasError = imageErrors[recipe.id];
+              const imageUrl = getSmartImageUrl(recipe);
 
               return (
                 <Link 
@@ -139,20 +155,12 @@ export default function Home() {
                   key={recipe.id}
                   className="group bg-white rounded-3xl border border-slate-200/70 overflow-hidden shadow-sm hover:shadow-xl transition-all duration-500 hover:-translate-y-1.5 flex flex-col"
                 >
-                  <div className="relative h-56 overflow-hidden bg-slate-100 flex items-center justify-center">
-                    {!hasError && recipe.image_url ? (
-                      <img 
-                        src={recipe.image_url} 
-                        alt={recipe.title} 
-                        onError={() => handleImageError(recipe.id)}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
-                      />
-                    ) : (
-                      <div className="w-full h-full bg-gradient-to-br from-slate-100 to-slate-200 flex flex-col items-center justify-center text-slate-400 group-hover:scale-105 transition-transform duration-700">
-                        <span className="text-4xl mb-2">🍲</span>
-                        <span className="text-xs font-bold uppercase tracking-wider text-slate-500">KochApp</span>
-                      </div>
-                    )}
+                  <div className="relative h-56 overflow-hidden bg-slate-100">
+                    <img 
+                      src={imageUrl} 
+                      alt={recipe.title} 
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
+                    />
                     <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-md px-3 py-1.5 rounded-full text-xs font-bold text-slate-800 shadow-sm border border-white/20 z-10">
                       {badgeText}
                     </div>
