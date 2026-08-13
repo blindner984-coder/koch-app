@@ -17,16 +17,12 @@ export default function Home() {
     setManualRecipes(savedManual);
   }, []);
 
-  const combinedRecipes = [...allRecipes, --kiRecipes, --manualRecipes]; // Falls manuelle Rezepte da sind
-
-  // Da wir alle kombinierten Arrays sauber zusammenführen wollen:
-  const allCombined = [...allRecipes, ...kiRecipes, ...manualRecipes];
+  const combinedRecipes = [...allRecipes, ...kiRecipes, ...manualRecipes];
 
   const categories = ['Alle', 'Klassiker', 'Suppe', 'Pasta', 'Auflauf', 'Hauptgericht', 'Fisch', 'Salat', 'Vegetarisch', 'Dessert', 'Backen'];
 
-  // 100% Automatischer Override: Ignoriert kaputte Links und wählt immer das perfekte Foto anhand des Namens
-  const getForcedImageUrl = (recipe: Recipe) => {
-    // Wenn es ein manuelles Rezept mit einem echten Bild ist, nimm es. Sonst entscheidet die Automatik:
+  // Zuverlässige Bild-Zuweisung per CSS-Hintergrund
+  const getImageUrl = (recipe: Recipe) => {
     const text = (recipe.title + ' ' + (recipe.category || '')).toLowerCase();
 
     if (text.includes('spaghetti') || text.includes('bolognese') || text.includes('pasta') || text.includes('nudel')) {
@@ -66,13 +62,12 @@ export default function Home() {
       return 'https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?w=600';
     }
 
-    // Falls ein gültiges Bild in der Rezept-Struktur hinterlegt ist, nutze es, sonst den Standard
-    return recipe.image_url && recipe.image_url.startsWith('http') && !recipe.image_url.includes('example')
+    return recipe.image_url && recipe.image_url.startsWith('http') 
       ? recipe.image_url 
       : 'https://images.unsplash.com/photo-1498837167922-ddd27525d352?w=600';
   };
 
-  const filteredRecipes = allCombined.filter((recipe) => {
+  const filteredRecipes = combinedRecipes.filter((recipe) => {
     const matchesSearch = recipe.title.toLowerCase().includes(search.toLowerCase());
     const matchesCategory = selectedCategory === 'Alle' || recipe.category === selectedCategory;
     return matchesSearch && matchesCategory;
@@ -177,7 +172,7 @@ export default function Home() {
               const isManual = manualRecipes.some((m) => m.id === recipe.id);
               const isKi = kiRecipes.some((k) => k.id === recipe.id);
               const badgeText = isManual ? '✍️ Manuell' : isKi ? '⭐ Gespeichert' : (recipe.category || 'Rezept');
-              const imageUrl = getForcedImageUrl(recipe);
+              const bgImageUrl = getImageUrl(recipe);
 
               return (
                 <Link 
@@ -185,18 +180,17 @@ export default function Home() {
                   key={recipe.id}
                   className="group bg-white rounded-3xl border border-slate-200/70 overflow-hidden shadow-sm hover:shadow-xl transition-all duration-500 hover:-translate-y-1.5 flex flex-col"
                 >
-                  <div className="relative h-56 overflow-hidden bg-slate-100">
-                    <img 
-                      src={imageUrl} 
-                      alt={recipe.title} 
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
-                    />
+                  {/* Hintergrundbild als CSS-Style garantiert, dass das Bild immer dargestellt wird */}
+                  <div 
+                    className="relative h-56 w-full bg-cover bg-center transition-transform duration-700 ease-out group-hover:scale-105"
+                    style={{ backgroundImage: `url(${bgImageUrl})` }}
+                  >
                     <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-md px-3 py-1.5 rounded-full text-xs font-bold text-slate-800 shadow-sm border border-white/20 z-10">
                       {badgeText}
                     </div>
                   </div>
 
-                  <div className="p-6 flex flex-col flex-grow justify-between">
+                  <div className="p-6 flex flex-col flex-grow justify-between bg-white">
                     <div>
                       <h2 className="text-xl font-extrabold text-slate-900 group-hover:text-slate-600 transition-colors mb-2 line-clamp-1">
                         {recipe.title}
