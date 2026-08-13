@@ -21,50 +21,46 @@ export default function Home() {
 
   const categories = ['Alle', 'Klassiker', 'Suppe', 'Pasta', 'Auflauf', 'Hauptgericht', 'Fisch', 'Salat', 'Vegetarisch', 'Dessert', 'Backen'];
 
-  // Zuverlässige Bild-Zuweisung per CSS-Hintergrund
-  const getImageUrl = (recipe: Recipe) => {
-    const text = (recipe.title + ' ' + (recipe.category || '')).toLowerCase();
+  // Feste, zu 100% funktionierende Direkt-Zuordnung nach Rezept-ID oder Name
+  const getDirectImageUrl = (recipe: Recipe) => {
+    const id = recipe.id || '';
+    const title = (recipe.title || '').toLowerCase();
 
-    if (text.includes('spaghetti') || text.includes('bolognese') || text.includes('pasta') || text.includes('nudel')) {
+    if (id.includes('spaghetti') || title.includes('spaghetti') || title.includes('bolognese')) {
       return 'https://images.unsplash.com/photo-1621996346565-e3d5d6281229?w=600';
     }
-    if (text.includes('frikassee') || text.includes('hähnchen') || text.includes('hahn') || text.includes('chicken')) {
+    if (id.includes('haenchen') || title.includes('frikassee') || title.includes('hähnchen')) {
       return 'https://images.unsplash.com/photo-1604908176997-125f2596f3a8?w=600';
     }
-    if (text.includes('kartoffel') || text.includes('püree') || text.includes('brei')) {
+    if (id.includes('kartoffel') || title.includes('kartoffelbrei') || title.includes('püree')) {
       return 'https://images.unsplash.com/photo-1518977676601-b5ff82803c43?w=600';
     }
-    if (text.includes('suppe') || text.includes('soup')) {
+    if (id.includes('karotten') || title.includes('suppe')) {
       return 'https://images.unsplash.com/photo-1547592166-23ac45744acd?w=600';
     }
-    if (text.includes('kuchen') || text.includes('torte') || text.includes('backen') || text.includes('brownie') || text.includes('muffin')) {
+    if (id.includes('apfelkuchen') || title.includes('kuchen')) {
       return 'https://images.unsplash.com/photo-1606313564200-e75d5e30476c?w=600';
     }
-    if (text.includes('pizza')) {
+    if (id.includes('pizza') || title.includes('pizza')) {
       return 'https://images.unsplash.com/photo-1513104890138-7c749659a591?w=600';
     }
-    if (text.includes('eis') || text.includes('milchreis') || text.includes('dessert') || text.includes('süß') || text.includes('tiramisu')) {
+    if (id.includes('erdbeer') || title.includes('eis') || title.includes('milchreis')) {
       return 'https://images.unsplash.com/photo-1488477181946-6428a0291777?w=600';
     }
-    if (text.includes('risotto') || text.includes('reis')) {
+    if (id.includes('risotto') || title.includes('risotto')) {
       return 'https://images.unsplash.com/photo-1633964913295-ceb43826e7c9?w=600';
     }
-    if (text.includes('curry') || text.includes('dip')) {
+    if (id.includes('dattel') || title.includes('curry')) {
       return 'https://images.unsplash.com/photo-1455619452474-d2be8b1e70cd?w=600';
     }
-    if (text.includes('gulasch') || text.includes('fleisch') || text.includes('braten') || text.includes('steak')) {
+    if (id.includes('gulasch') || title.includes('gulasch')) {
       return 'https://images.unsplash.com/photo-1534939561126-855b8675edd7?w=600';
     }
-    if (text.includes('salat') || text.includes('brokkoli')) {
+    if (id.includes('salat') || title.includes('salat')) {
       return 'https://images.unsplash.com/photo-1540420773420-3366772f4999?w=600';
     }
-    if (text.includes('fisch') || text.includes('lachs')) {
-      return 'https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?w=600';
-    }
 
-    return recipe.image_url && recipe.image_url.startsWith('http') 
-      ? recipe.image_url 
-      : 'https://images.unsplash.com/photo-1498837167922-ddd27525d352?w=600';
+    return 'https://images.unsplash.com/photo-1498837167922-ddd27525d352?w=600';
   };
 
   const filteredRecipes = combinedRecipes.filter((recipe) => {
@@ -172,7 +168,7 @@ export default function Home() {
               const isManual = manualRecipes.some((m) => m.id === recipe.id);
               const isKi = kiRecipes.some((k) => k.id === recipe.id);
               const badgeText = isManual ? '✍️ Manuell' : isKi ? '⭐ Gespeichert' : (recipe.category || 'Rezept');
-              const bgImageUrl = getImageUrl(recipe);
+              const finalImg = getDirectImageUrl(recipe);
 
               return (
                 <Link 
@@ -180,13 +176,12 @@ export default function Home() {
                   key={recipe.id}
                   className="group bg-white rounded-3xl border border-slate-200/70 overflow-hidden shadow-sm hover:shadow-xl transition-all duration-500 hover:-translate-y-1.5 flex flex-col"
                 >
-                  {/* Hintergrundbild als CSS-Style garantiert, dass das Bild immer dargestellt wird */}
                   <div 
                     className="relative h-56 w-full bg-cover bg-center transition-transform duration-700 ease-out group-hover:scale-105"
-                    style={{ backgroundImage: `url(${bgImageUrl})` }}
+                    style={{ backgroundImage: `url("${finalImg}")` }}
                   >
                     <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-md px-3 py-1.5 rounded-full text-xs font-bold text-slate-800 shadow-sm border border-white/20 z-10">
-                      {badgeText}
+                      {badgeTestText => badgeText}
                     </div>
                   </div>
 
