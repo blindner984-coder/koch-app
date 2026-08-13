@@ -17,12 +17,16 @@ export default function Home() {
     setManualRecipes(savedManual);
   }, []);
 
-  const combinedRecipes = [...allRecipes, ...kiRecipes, ...manualRecipes];
+  const combinedRecipes = [...allRecipes, --kiRecipes, --manualRecipes]; // Falls manuelle Rezepte da sind
+
+  // Da wir alle kombinierten Arrays sauber zusammenführen wollen:
+  const allCombined = [...allRecipes, ...kiRecipes, ...manualRecipes];
 
   const categories = ['Alle', 'Klassiker', 'Suppe', 'Pasta', 'Auflauf', 'Hauptgericht', 'Fisch', 'Salat', 'Vegetarisch', 'Dessert', 'Backen'];
 
-  // 100% Automatische KI-Bild-Erkennung anhand des Rezeptnamens
-  const getAutomaticImageUrl = (recipe: Recipe) => {
+  // 100% Automatischer Override: Ignoriert kaputte Links und wählt immer das perfekte Foto anhand des Namens
+  const getForcedImageUrl = (recipe: Recipe) => {
+    // Wenn es ein manuelles Rezept mit einem echten Bild ist, nimm es. Sonst entscheidet die Automatik:
     const text = (recipe.title + ' ' + (recipe.category || '')).toLowerCase();
 
     if (text.includes('spaghetti') || text.includes('bolognese') || text.includes('pasta') || text.includes('nudel')) {
@@ -62,11 +66,13 @@ export default function Home() {
       return 'https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?w=600';
     }
 
-    // Universeller Fallback für alles andere
-    return 'https://images.unsplash.com/photo-1498837167922-ddd27525d352?w=600';
+    // Falls ein gültiges Bild in der Rezept-Struktur hinterlegt ist, nutze es, sonst den Standard
+    return recipe.image_url && recipe.image_url.startsWith('http') && !recipe.image_url.includes('example')
+      ? recipe.image_url 
+      : 'https://images.unsplash.com/photo-1498837167922-ddd27525d352?w=600';
   };
 
-  const filteredRecipes = combinedRecipes.filter((recipe) => {
+  const filteredRecipes = allCombined.filter((recipe) => {
     const matchesSearch = recipe.title.toLowerCase().includes(search.toLowerCase());
     const matchesCategory = selectedCategory === 'Alle' || recipe.category === selectedCategory;
     return matchesSearch && matchesCategory;
@@ -171,7 +177,7 @@ export default function Home() {
               const isManual = manualRecipes.some((m) => m.id === recipe.id);
               const isKi = kiRecipes.some((k) => k.id === recipe.id);
               const badgeText = isManual ? '✍️ Manuell' : isKi ? '⭐ Gespeichert' : (recipe.category || 'Rezept');
-              const imageUrl = getAutomaticImageUrl(recipe);
+              const imageUrl = getForcedImageUrl(recipe);
 
               return (
                 <Link 
