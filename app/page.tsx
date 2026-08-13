@@ -181,7 +181,7 @@ export default function Home() {
                     style={{ backgroundImage: `url("${finalImg}")` }}
                   >
                     <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-md px-3 py-1.5 rounded-full text-xs font-bold text-slate-800 shadow-sm border border-white/20 z-10">
-                      {badgeTestText => badgeText}
+                      {badgeText}
                     </div>
                   </div>
 
