@@ -14,7 +14,7 @@ export const allRecipes: Recipe[] = [
     title: 'Karotten-Ingwer-Suppe',
     category: 'Suppe',
     prep_time: 25,
-    image_url: 'https://images.unsplash.com/photo-1547592166-23ac45744acd?w=600',
+    image_url: 'https://images.unsplash.com/photo-1547592166-23ac45744acd?auto=format&fit=crop&w=600&q=80',
     ingredients: [
       { name: 'Karotten', amountNeeded: 500, unit: 'g' },
       { name: 'Ingwer', amountNeeded: 20, unit: 'g' },
@@ -32,7 +32,7 @@ export const allRecipes: Recipe[] = [
     title: 'Klassischer Apfelkuchen',
     category: 'Backen',
     prep_time: 60,
-    image_url: 'https://images.unsplash.com/photo-1606313564200-e75d5e30476c?w=600',
+    image_url: 'https://images.unsplash.com/photo-1606313564200-e75d5e30476c?auto=format&fit=crop&w=600&q=80',
     ingredients: [
       { name: 'Äpfel', amountNeeded: 4, unit: 'Stk' },
       { name: 'Mehl', amountNeeded: 250, unit: 'g' },
@@ -51,7 +51,7 @@ export const allRecipes: Recipe[] = [
     title: 'Spaghetti Bolognese',
     category: 'Pasta',
     prep_time: 40,
-    image_url: 'https://images.unsplash.com/photo-1621996346565-e3d5d6281229?w=600',
+    image_url: 'https://images.unsplash.com/photo-1621996346565-e3d5d6281229?auto=format&fit=crop&w=600&q=80',
     ingredients: [
       { name: 'Spaghetti', amountNeeded: 400, unit: 'g' },
       { name: 'Hackfleisch', amountNeeded: 500, unit: 'g' },
@@ -70,7 +70,7 @@ export const allRecipes: Recipe[] = [
     title: 'Fruchtiges Erdbeer-Eis',
     category: 'Dessert',
     prep_time: 5,
-    image_url: 'https://images.unsplash.com/photo-1488477181946-6428a0291777?w=600',
+    image_url: 'https://images.unsplash.com/photo-1488477181946-6428a0291777?auto=format&fit=crop&w=600&q=80',
     ingredients: [
       { name: 'Gefrorene Erdbeeren', amountNeeded: 300, unit: 'g' },
       { name: 'Sahne', amountNeeded: 100, unit: 'g' },
@@ -87,7 +87,7 @@ export const allRecipes: Recipe[] = [
     title: 'Perfekter Pizzateig',
     category: 'Backen',
     prep_time: 15,
-    image_url: 'https://images.unsplash.com/photo-1513104890138-7c749659a591?w=600',
+    image_url: 'https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=600&q=80',
     ingredients: [
       { name: 'Mehl (Type 00)', amountNeeded: 500, unit: 'g' },
       { name: 'Wasser (lauwarm)', amountNeeded: 300, unit: 'ml' },
@@ -106,7 +106,7 @@ export const allRecipes: Recipe[] = [
     title: 'Cremiges Pilz-Risotto',
     category: 'Hauptgericht',
     prep_time: 35,
-    image_url: 'https://images.unsplash.com/photo-1633964913295-ceb43826e7c9?w=600',
+    image_url: 'https://images.unsplash.com/photo-1633964913295-ceb43826e7c9?auto=format&fit=crop&w=600&q=80',
     ingredients: [
       { name: 'Risottoreis', amountNeeded: 300, unit: 'g' },
       { name: 'Champignons', amountNeeded: 250, unit: 'g' },
@@ -124,7 +124,7 @@ export const allRecipes: Recipe[] = [
     title: 'Dattel-Curry-Dip',
     category: 'Vegetarisch',
     prep_time: 10,
-    image_url: 'https://images.unsplash.com/photo-1455619452474-d2be8b1e70cd?w=600',
+    image_url: 'https://images.unsplash.com/photo-1455619452474-d2be8b1e70cd?auto=format&fit=crop&w=600&q=80',
     ingredients: [
       { name: 'Frischkäse', amountNeeded: 200, unit: 'g' },
       { name: 'Datteln', amountNeeded: 80, unit: 'g' },
@@ -141,7 +141,7 @@ export const allRecipes: Recipe[] = [
     title: 'Deftiges Rindergulasch',
     category: 'Hauptgericht',
     prep_time: 75,
-    image_url: 'https://images.unsplash.com/photo-1534939561126-855b8675edd7?w=600',
+    image_url: 'https://images.unsplash.com/photo-1534939561126-855b8675edd7?auto=format&fit=crop&w=600&q=80',
     ingredients: [
       { name: 'Rindergulasch', amountNeeded: 600, unit: 'g' },
       { name: 'Zwiebeln', amountNeeded: 400, unit: 'g' },
@@ -159,7 +159,7 @@ export const allRecipes: Recipe[] = [
     title: 'Brokkoli-Apfel-Salat',
     category: 'Salat',
     prep_time: 10,
-    image_url: 'https://images.unsplash.com/photo-1540420773420-3366772f4999?w=600',
+    image_url: 'https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=600&q=80',
     ingredients: [
       { name: 'Brokkoli', amountNeeded: 1, unit: 'Stk' },
       { name: 'Apfel', amountNeeded: 1, unit: 'Stk' },
@@ -176,7 +176,7 @@ export const allRecipes: Recipe[] = [
     title: 'Cremiger Milchreis',
     category: 'Dessert',
     prep_time: 40,
-    image_url: 'https://images.unsplash.com/photo-1488477181946-6428a0291777?w=600',
+    image_url: 'https://images.unsplash.com/photo-1488477181946-6428a0291777?auto=format&fit=crop&w=600&q=80',
     ingredients: [
       { name: 'Milchreis', amountNeeded: 250, unit: 'g' },
       { name: 'Milch', amountNeeded: 1, unit: 'l' },
@@ -193,7 +193,7 @@ export const allRecipes: Recipe[] = [
     title: 'Fluffiger Kartoffelbrei',
     category: 'Vegetarisch',
     prep_time: 35,
-    image_url: 'https://images.unsplash.com/photo-1518977676601-b5ff82803c43?w=600',
+    image_url: 'https://images.unsplash.com/photo-1518977676601-b5ff82803c43?auto=format&fit=crop&w=600&q=80',
     ingredients: [
       { name: 'Kartoffeln (mehlig)', amountNeeded: 800, unit: 'g' },
       { name: 'Milch', amountNeeded: 150, unit: 'ml' },
@@ -210,7 +210,7 @@ export const allRecipes: Recipe[] = [
     title: 'Hähnchen-Frikassee mit Reis',
     category: 'Hauptgericht',
     prep_time: 45,
-    image_url: 'https://images.unsplash.com/photo-1604908176997-125f2596f3a8?w=600',
+    image_url: 'https://images.unsplash.com/photo-1604908176997-125f2596f3a8?auto=format&fit=crop&w=600&q=80',
     ingredients: [
       { name: 'Hähnchenbrust', amountNeeded: 500, unit: 'g' },
       { name: 'Reis', amountNeeded: 250, unit: 'g' },
