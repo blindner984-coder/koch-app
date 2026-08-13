@@ -14,7 +14,7 @@ export const allRecipes: Recipe[] = [
     title: 'Karotten-Ingwer-Suppe',
     category: 'Suppe',
     prep_time: 25,
-    image_url: 'https://images.unsplash.com/photo-1547592166-23ac45744acd?auto=format&fit=crop&w=600&q=80',
+    image_url: 'https://images.unsplash.com/photo-1547592166-23ac45744acd?w=600',
     ingredients: [
       { name: 'Karotten', amountNeeded: 500, unit: 'g' },
       { name: 'Ingwer', amountNeeded: 20, unit: 'g' },
@@ -32,7 +32,7 @@ export const allRecipes: Recipe[] = [
     title: 'Klassischer Apfelkuchen',
     category: 'Backen',
     prep_time: 60,
-    image_url: 'https://images.unsplash.com/photo-1606313564200-e75d5e30476c?auto=format&fit=crop&w=600&q=80',
+    image_url: 'https://images.unsplash.com/photo-1606313564200-e75d5e30476c?w=600',
     ingredients: [
       { name: 'Äpfel', amountNeeded: 4, unit: 'Stk' },
       { name: 'Mehl', amountNeeded: 250, unit: 'g' },
@@ -47,22 +47,22 @@ export const allRecipes: Recipe[] = [
     ]
   },
   {
-    id: 'spaghetti-bolognese',
-    title: 'Spaghetti Bolognese',
+    id: 'lasagne-al-forno',
+    title: 'Lasagne al Forno',
     category: 'Pasta',
-    prep_time: 40,
-    image_url: 'https://images.unsplash.com/photo-1621996346565-e3d5d6281229?auto=format&fit=crop&w=600&q=80',
+    prep_time: 50,
+    image_url: 'https://images.unsplash.com/photo-1551183053-bf91a1d81141?w=600',
     ingredients: [
-      { name: 'Spaghetti', amountNeeded: 400, unit: 'g' },
+      { name: 'Lasagneplatten', amountNeeded: 250, unit: 'g' },
       { name: 'Hackfleisch', amountNeeded: 500, unit: 'g' },
-      { name: 'Tomaten (gestückelt)', amountNeeded: 400, unit: 'g' },
-      { name: 'Zwiebel', amountNeeded: 1, unit: 'Stk' }
+      { name: 'Tomatensauce', amountNeeded: 500, unit: 'ml' },
+      { name: 'Geriebener Käse', amountNeeded: 200, unit: 'g' }
     ],
     instructions: [
-      'Spaghetti in Salzwasser al dente kochen.',
-      'Zwiebel hacken und mit Hackfleisch scharf anbraten.',
-      'Tomaten hinzufügen und die Sauce 20 Minuten köcheln lassen.',
-      'Mit Spaghetti servieren.'
+      'Hackfleisch anbraten und mit Tomatensauce verfeinern.',
+      'Eine Auflaufform abwechselnd mit Sauce, Platten und Fleisch schichten.',
+      'Mit reichlich Käse bestreuen.',
+      'Im Ofen bei 200 Grad ca. 35 Minuten goldbraun backen.'
     ]
   },
   {
@@ -70,7 +70,7 @@ export const allRecipes: Recipe[] = [
     title: 'Fruchtiges Erdbeer-Eis',
     category: 'Dessert',
     prep_time: 5,
-    image_url: 'https://images.unsplash.com/photo-1488477181946-6428a0291777?auto=format&fit=crop&w=600&q=80',
+    image_url: 'https://images.unsplash.com/photo-1488477181946-6428a0291777?w=600',
     ingredients: [
       { name: 'Gefrorene Erdbeeren', amountNeeded: 300, unit: 'g' },
       { name: 'Sahne', amountNeeded: 100, unit: 'g' },
@@ -87,7 +87,7 @@ export const allRecipes: Recipe[] = [
     title: 'Perfekter Pizzateig',
     category: 'Backen',
     prep_time: 15,
-    image_url: 'https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=600&q=80',
+    image_url: 'https://images.unsplash.com/photo-1513104890138-7c749659a591?w=600',
     ingredients: [
       { name: 'Mehl (Type 00)', amountNeeded: 500, unit: 'g' },
       { name: 'Wasser (lauwarm)', amountNeeded: 300, unit: 'ml' },
@@ -106,7 +106,7 @@ export const allRecipes: Recipe[] = [
     title: 'Cremiges Pilz-Risotto',
     category: 'Hauptgericht',
     prep_time: 35,
-    image_url: 'https://images.unsplash.com/photo-1633964913295-ceb43826e7c9?auto=format&fit=crop&w=600&q=80',
+    image_url: 'https://images.unsplash.com/photo-1633964913295-ceb43826e7c9?w=600',
     ingredients: [
       { name: 'Risottoreis', amountNeeded: 300, unit: 'g' },
       { name: 'Champignons', amountNeeded: 250, unit: 'g' },
@@ -124,7 +124,7 @@ export const allRecipes: Recipe[] = [
     title: 'Dattel-Curry-Dip',
     category: 'Vegetarisch',
     prep_time: 10,
-    image_url: 'https://images.unsplash.com/photo-1455619452474-d2be8b1e70cd?auto=format&fit=crop&w=600&q=80',
+    image_url: 'https://images.unsplash.com/photo-1455619452474-d2be8b1e70cd?w=600',
     ingredients: [
       { name: 'Frischkäse', amountNeeded: 200, unit: 'g' },
       { name: 'Datteln', amountNeeded: 80, unit: 'g' },
@@ -141,7 +141,7 @@ export const allRecipes: Recipe[] = [
     title: 'Deftiges Rindergulasch',
     category: 'Hauptgericht',
     prep_time: 75,
-    image_url: 'https://images.unsplash.com/photo-1534939561126-855b8675edd7?auto=format&fit=crop&w=600&q=80',
+    image_url: 'https://images.unsplash.com/photo-1534939561126-855b8675edd7?w=600',
     ingredients: [
       { name: 'Rindergulasch', amountNeeded: 600, unit: 'g' },
       { name: 'Zwiebeln', amountNeeded: 400, unit: 'g' },
@@ -159,7 +159,7 @@ export const allRecipes: Recipe[] = [
     title: 'Brokkoli-Apfel-Salat',
     category: 'Salat',
     prep_time: 10,
-    image_url: 'https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=600&q=80',
+    image_url: 'https://images.unsplash.com/photo-1540420773420-3366772f4999?w=600',
     ingredients: [
       { name: 'Brokkoli', amountNeeded: 1, unit: 'Stk' },
       { name: 'Apfel', amountNeeded: 1, unit: 'Stk' },
@@ -176,7 +176,7 @@ export const allRecipes: Recipe[] = [
     title: 'Cremiger Milchreis',
     category: 'Dessert',
     prep_time: 40,
-    image_url: 'https://images.unsplash.com/photo-1488477181946-6428a0291777?auto=format&fit=crop&w=600&q=80',
+    image_url: 'https://images.unsplash.com/photo-1488477181946-6428a0291777?w=600',
     ingredients: [
       { name: 'Milchreis', amountNeeded: 250, unit: 'g' },
       { name: 'Milch', amountNeeded: 1, unit: 'l' },
@@ -189,39 +189,41 @@ export const allRecipes: Recipe[] = [
     ]
   },
   {
-    id: 'fluffiger-kartoffelbrei',
-    title: 'Fluffiger Kartoffelbrei',
-    category: 'Vegetarisch',
-    prep_time: 35,
-    image_url: 'https://images.unsplash.com/photo-1518977676601-b5ff82803c43?auto=format&fit=crop&w=600&q=80',
+    id: 'kaesespaetzle',
+    title: 'Deftige Käsespätzle',
+    category: 'Klassiker',
+    prep_time: 30,
+    image_url: 'https://images.unsplash.com/photo-1608897013039-887f21d8c804?w=600',
     ingredients: [
-      { name: 'Kartoffeln (mehlig)', amountNeeded: 800, unit: 'g' },
-      { name: 'Milch', amountNeeded: 150, unit: 'ml' },
-      { name: 'Butter', amountNeeded: 40, unit: 'g' }
+      { name: 'Spätzle', amountNeeded: 400, unit: 'g' },
+      { name: 'Geriebener Bergkäse', amountNeeded: 200, unit: 'g' },
+      { name: 'Zwiebeln', amountNeeded: 2, unit: 'Stk' },
+      { name: 'Butter', amountNeeded: 30, unit: 'g' }
     ],
     instructions: [
-      'Kartoffeln schälen und in Salzwasser weich kochen.',
-      'Wasser abgießen und Kartoffeln stampfen.',
-      'Warme Milch und Butter unterrühren bis es cremig wird.'
+      'Spätzle in Salzwasser kochen bis sie an der Oberfläche schwimmen.',
+      'Zwiebeln in Ringe schneiden und in Butter goldbraun anbraten.',
+      'Spätzle abwechselnd mit Bergkäse in eine warme Form schichten und schmelzen lassen.',
+      'Mit Röstzwiebeln garnieren und servieren.'
     ]
   },
   {
-    id: 'haenchen-frikassee-mit-reis',
-    title: 'Hähnchen-Frikassee mit Reis',
-    category: 'Hauptgericht',
-    prep_time: 45,
-    image_url: 'https://images.unsplash.com/photo-1604908176997-125f2596f3a8?auto=format&fit=crop&w=600&q=80',
+    id: 'knuspriges-lachsfilet',
+    title: 'Knuspriges Lachsfilet',
+    category: 'Fisch',
+    prep_time: 25,
+    image_url: 'https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?w=600',
     ingredients: [
-      { name: 'Hähnchenbrust', amountNeeded: 500, unit: 'g' },
-      { name: 'Reis', amountNeeded: 250, unit: 'g' },
-      { name: 'Erbsen', amountNeeded: 150, unit: 'g' },
-      { name: 'Champignons', amountNeeded: 200, unit: 'g' }
+      { name: 'Lachsfilet', amountNeeded: 2, unit: 'Stk' },
+      { name: 'Olivenöl', amountNeeded: 2, unit: 'EL' },
+      { name: 'Zitrone', amountNeeded: 1, unit: 'Stk' },
+      { name: 'Rosmarin', amountNeeded: 1, unit: 'Zweig' }
     ],
     instructions: [
-      'Reis kochen.',
-      'Hähnchenbrust anbraten, herausnehmen und in Würfel schneiden.',
-      'Pilze und Erbsen anschwenken, helle Sauce anrühren und Fleisch dazugeben.',
-      'Zusammen mit dem Reis servieren.'
+      'Lachsfilet mit Salz und Pfeffer würzen.',
+      'In einer Pfanne mit Olivenöl und Rosmarin auf der Hautseite scharf anbraten.',
+      'Wenden und kurz gar ziehen lassen.',
+      'Mit frischem Zitronensaft beträufeln und servieren.'
     ]
   }
 ];

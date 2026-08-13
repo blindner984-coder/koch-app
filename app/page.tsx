@@ -21,50 +21,6 @@ export default function Home() {
 
   const categories = ['Alle', 'Klassiker', 'Suppe', 'Pasta', 'Auflauf', 'Hauptgericht', 'Fisch', 'Salat', 'Vegetarisch', 'Dessert', 'Backen'];
 
-  // Zu 100% funktionierende Bild-URLs direkt per Mapping
-  const getImageForRecipe = (recipe: Recipe) => {
-    const id = (recipe.id || '').toLowerCase();
-    const title = (recipe.title || '').toLowerCase();
-
-    if (id.includes('spaghetti') || title.includes('spaghetti') || title.includes('bolognese')) {
-      return 'https://images.unsplash.com/photo-1621996346565-e3d5d6281229?w=600';
-    }
-    if (id.includes('haenchen') || title.includes('frikassee') || title.includes('hähnchen')) {
-      return 'https://images.unsplash.com/photo-1604908176997-125f2596f3a8?w=600';
-    }
-    if (id.includes('kartoffel') || title.includes('kartoffelbrei') || title.includes('püree')) {
-      return 'https://images.unsplash.com/photo-1518977676601-b5ff82803c43?w=600';
-    }
-    if (id.includes('karotten') || title.includes('suppe')) {
-      return 'https://images.unsplash.com/photo-1547592166-23ac45744acd?w=600';
-    }
-    if (id.includes('apfelkuchen') || title.includes('kuchen')) {
-      return 'https://images.unsplash.com/photo-1606313564200-e75d5e30476c?w=600';
-    }
-    if (id.includes('pizza') || title.includes('pizza')) {
-      return 'https://images.unsplash.com/photo-1513104890138-7c749659a591?w=600';
-    }
-    if (id.includes('erdbeer') || title.includes('eis') || title.includes('milchreis')) {
-      return 'https://images.unsplash.com/photo-1488477181946-6428a0291777?w=600';
-    }
-    if (id.includes('risotto') || title.includes('risotto')) {
-      return 'https://images.unsplash.com/photo-1633964913295-ceb43826e7c9?w=600';
-    }
-    if (id.includes('dattel') || title.includes('curry')) {
-      return 'https://images.unsplash.com/photo-1455619452474-d2be8b1e70cd?w=600';
-    }
-    if (id.includes('gulasch') || title.includes('gulasch')) {
-      return 'https://images.unsplash.com/photo-1534939561126-855b8675edd7?w=600';
-    }
-    if (id.includes('salat') || title.includes('salat')) {
-      return 'https://images.unsplash.com/photo-1540420773420-3366772f4999?w=600';
-    }
-
-    return recipe.image_url && recipe.image_url.startsWith('http') 
-      ? recipe.image_url 
-      : 'https://images.unsplash.com/photo-1498837167922-ddd27525d352?w=600';
-  };
-
   const filteredRecipes = combinedRecipes.filter((recipe) => {
     const matchesSearch = recipe.title.toLowerCase().includes(search.toLowerCase());
     const matchesCategory = selectedCategory === 'Alle' || recipe.category === selectedCategory;
@@ -170,7 +126,7 @@ export default function Home() {
               const isManual = manualRecipes.some((m) => m.id === recipe.id);
               const isKi = kiRecipes.some((k) => k.id === recipe.id);
               const badgeText = isManual ? '✍️ Manuell' : isKi ? '⭐ Gespeichert' : (recipe.category || 'Rezept');
-              const imageUrl = getImageForRecipe(recipe);
+              const imageUrl = recipe.image_url || 'https://images.unsplash.com/photo-1498837167922-ddd27525d352?w=600';
 
               return (
                 <Link 
