@@ -3,199 +3,82 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
-import { allRecipes, Recipe } from '../../recipes';
 
-interface IngredientState {
-  selected: boolean;
-  amount: number | string;
-}
-
-export default function RecipeDetailPage() {
-  const { id } = useParams();
-  const [recipe, setRecipe] = useState<Recipe | null>(null);
+export default function RezeptDetailPage() {
+  const params = useParams();
+  const id = params.id as string;
+  const [recipe, setRecipe] = useState<any>(null);
   const [loading, setLoading] = useState(true);
-  const [addedToList, setAddedToList] = useState(false);
-  
-  const [ingStates, setIngStates] = useState<Record<string, IngredientState>>({});
 
   useEffect(() => {
-    const kiRecipes = JSON.parse(localStorage.getItem('savedKiRecipes') || '[]');
-    const manualRecipes = JSON.parse(localStorage.getItem('manualRecipes') || '[]');
-    const combinedRecipes = [...allRecipes, ...kiRecipes, ...manualRecipes];
+    if (!id) return;
     
-    const found = combinedRecipes.find((r) => r.id === id);
+    // Gespeicherte Rezepte aus dem Browser laden
+    const storedRecipes = JSON.parse(localStorage.getItem('recipes') || '[]');
+    
+    // Standard-Fallback-Rezepte
+    const defaultRecipes = [
+      {
+        id: 'karotten-ingwer-suppe',
+        title: 'Karotten-Ingwer-Suppe',
+        category: 'Suppe',
+        prep_time: 25,
+        image_url: 'https://images.unsplash.com/photo-1547592166-23ac45744acd?w=600',
+        ingredients: ['500g Karotten', '1 Stk. Ingwer', '1 Zwiebel', '500ml Gemüsebrühe'],
+        instructions: ['Karotten und Ingwer schneiden.', 'Anbraten und mit Brühe ablöschen.', 'Pürieren und servieren.']
+      }
+    ];
+
+    const allRecipes = [...storedRecipes, ...defaultRecipes];
+    const found = allRecipes.find((r: any) => r.id === id);
+
     if (found) {
       setRecipe(found);
-      
-      const initialStates: Record<string, IngredientState> = {};
-      found.ingredients?.forEach((ing: any, index: number) => {
-        const uniqueKey = `${found.id}-ing-${index}`;
-        initialStates[uniqueKey] = { selected: true, amount: ing.amountNeeded };
-      });
-      setIngStates(initialStates);
     }
     setLoading(false);
   }, [id]);
 
-  const toggleIngredient = (key: string) => {
-    setIngStates(prev => ({
-      ...prev,
-      [key]: { ...prev[key], selected: !prev[key].selected }
-    }));
-  };
-
-  const updateAmount = (key: string, newAmount: string) => {
-    setIngStates(prev => ({
-      ...prev,
-      [key]: { ...prev[key], amount: newAmount }
-    }));
-  };
-
-  const addToShoppingList = () => {
-    if (!recipe || !recipe.ingredients) return;
-
-    const currentList = JSON.parse(localStorage.getItem('shoppingList') || '[]');
-
-    const itemsToAdd = recipe.ingredients
-      .map((ing: any, index: number) => {
-        const uniqueKey = `${recipe.id}-ing-${index}`;
-        return { ing, uniqueKey, state: ingStates[uniqueKey] };
-      })
-      .filter((item: any) => item.state?.selected)
-      .map((item: any) => ({
-        id: 'item-' + Date.now() + '-' + Math.random().toString(36).substr(2, 5),
-        name: item.ing.name,
-        amount: item.state.amount,
-        unit: item.ing.unit,
-        recipeTitle: recipe.title,
-        checked: false
-      }));
-
-    if (itemsToAdd.length === 0) {
-      alert("Du hast keine Zutaten ausgewählt!");
-      return;
-    }
-
-    localStorage.setItem('shoppingList', JSON.stringify([...currentList, ...itemsToAdd]));
-    
-    setAddedToList(true);
-    setTimeout(() => setAddedToList(false), 3000);
-  };
-
-  if (loading) return <div className="p-16 text-center text-xl font-bold text-slate-500">Lade Rezept... ⏳</div>;
+  if (loading) {
+    return <div className="max-w-4xl mx-auto p-6 text-center text-gray-500">Lade Rezept...</div>;
+  }
 
   if (!recipe) {
     return (
-      <div className="p-16 text-center">
-        <span className="text-5xl mb-4 block">🔍</span>
-        <h1 className="text-2xl font-bold text-slate-900 mb-4">Rezept nicht gefunden!</h1>
-        <Link href="/" className="text-blue-500 hover:underline font-medium">← Zurück zur Übersicht</Link>
+      <div className="max-w-4xl mx-auto p-6 text-center">
+        <h1 className="text-2xl font-bold mb-4">Rezept nicht gefunden!</h1>
+        <Link href="/" className="text-blue-600 underline">← Zurück zur Übersicht</Link>
       </div>
     );
   }
 
-  const selectedCount = Object.values(ingStates).filter((state: any) => state?.selected).length;
-
   return (
-    <div className="max-w-3xl mx-auto px-4 py-8 pb-32">
-      <Link href="/" className="text-slate-500 hover:text-slate-900 transition-colors mb-6 block font-medium">
+    <div className="max-w-4xl mx-auto p-6">
+      <Link href="/" className="text-sm text-gray-500 hover:underline mb-4 inline-block">
         ← Zurück zur Übersicht
       </Link>
-      
-      <img 
-        src={recipe.image_url || 'https://images.unsplash.com/photo-1498837167922-ddd27525d352?w=600'} 
-        alt={recipe.title} 
-        onError={(e) => { (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1498837167922-ddd27525d352?w=600'; }}
-        className="w-full h-80 object-cover rounded-3xl mb-8 shadow-md" 
-      />
-      
-      <h1 className="text-4xl font-extrabold text-slate-900 mb-2">{recipe.title}</h1>
-      <p className="text-slate-500 font-medium mb-8">⏱️ Zubereitungszeit: ca. {recipe.prep_time} Minuten</p>
-      
-      <div className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm mb-8">
-        <div className="flex justify-between items-center mb-6">
-          <h2 className="text-2xl font-bold text-slate-900">Zutatenliste 🛒</h2>
-          <p className="text-sm text-slate-500 font-medium">Was fehlt noch?</p>
-        </div>
-        
-        <div className="space-y-2 mb-8">
-          {recipe.ingredients?.map((ing: any, index: number) => {
-            const uniqueKey = `${recipe.id}-ing-${index}`;
-            const state = ingStates[uniqueKey] || { selected: true, amount: ing.amountNeeded };
-            
-            return (
-              <div 
-                key={uniqueKey} 
-                className={`flex flex-col sm:flex-row justify-between py-3 px-2 rounded-xl transition-colors ${state.selected ? 'hover:bg-slate-50' : 'opacity-60 bg-slate-50'}`}
-              >
-                <div 
-                  className="flex items-center gap-4 cursor-pointer mb-2 sm:mb-0 flex-grow" 
-                  onClick={() => toggleIngredient(uniqueKey)}
-                >
-                  <div className={`w-6 h-6 flex-shrink-0 rounded-md border-2 flex items-center justify-center transition-colors ${state.selected ? 'bg-slate-900 border-slate-900' : 'border-slate-300'}`}>
-                    {state.selected && <span className="text-white text-sm font-bold">✓</span>}
-                  </div>
-                  <span className={`font-medium ${state.selected ? 'text-slate-800' : 'text-slate-400 line-through'}`}>
-                    {ing.name}
-                  </span>
-                </div>
 
-                <div className="flex items-center gap-2 self-end sm:self-auto pl-10 sm:pl-0">
-                  {state.selected ? (
-                    <>
-                      <input 
-                        type="number" 
-                        step="any"
-                        value={state.amount} 
-                        onChange={(e) => updateAmount(uniqueKey, e.target.value)}
-                        className="w-16 p-1.5 text-center bg-white border border-slate-200 rounded-lg font-bold text-slate-900 outline-none focus:border-slate-900 focus:ring-1 focus:ring-slate-900 shadow-sm"
-                      />
-                      <span className="text-slate-700 font-bold bg-slate-100 px-3 py-1.5 rounded-lg min-w-[3rem] text-center">
-                        {ing.unit}
-                      </span>
-                    </>
-                  ) : (
-                    <span className="text-slate-400 font-medium bg-transparent px-3 py-1.5 rounded-lg line-through">
-                      {ing.amountNeeded} {ing.unit}
-                    </span>
-                  )}
-                </div>
-              </div>
-            );
-          })}
-        </div>
+      <div className="bg-white border rounded-2xl overflow-hidden shadow-sm p-6 mb-6">
+        <img
+          src={recipe.image_url}
+          alt={recipe.title}
+          className="w-full h-80 object-cover rounded-xl mb-6"
+        />
+        <h1 className="text-3xl font-bold mb-2">{recipe.title}</h1>
+        <p className="text-gray-600 mb-6">Zubereitungszeit: ca. {recipe.prep_time} Minuten</p>
 
-        <button 
-          onClick={addToShoppingList}
-          className={`w-full py-4 rounded-xl font-bold text-lg transition-all shadow-md ${
-            addedToList 
-              ? 'bg-green-500 hover:bg-green-600 text-white' 
-              : 'bg-slate-900 hover:bg-slate-800 text-white'
-          }`}
-        >
-          {addedToList 
-            ? '✅ Auf der Einkaufsliste!' 
-            : `+ ${selectedCount} Zutaten auf die Einkaufsliste`}
-        </button>
-      </div>
+        <h2 className="text-xl font-bold mb-3">Zutaten</h2>
+        <ul className="list-disc list-inside mb-8 space-y-2 text-gray-800">
+          {recipe.ingredients?.map((ing: string, i: number) => (
+            <li key={i}>{ing}</li>
+          ))}
+        </ul>
 
-      <div className="bg-slate-900 text-white p-6 md:p-8 rounded-3xl shadow-md">
-        <h2 className="text-2xl font-bold mb-6">Zubereitung 👨‍🍳</h2>
-        
-        {recipe.instructions && recipe.instructions.length > 0 ? (
-          <ol className="space-y-6">
-            {recipe.instructions.map((step: string, index: number) => (
-              <li key={index} className="flex gap-4">
-                <span className="flex-shrink-0 w-8 h-8 rounded-full bg-white text-slate-900 flex items-center justify-center font-bold shadow-sm">
-                  {index + 1}
-                </span>
-                <p className="pt-1 leading-relaxed text-slate-100">{step}</p>
-              </li>
-            ))}
-          </ol>
-        ) : (
-          <p className="text-slate-400 italic">Keine Zubereitungsschritte hinterlegt.</p>
-        )}
+        <h2 className="text-xl font-bold mb-3">Zubereitung</h2>
+        <ol className="list-decimal list-inside space-y-3 text-gray-800">
+          {recipe.instructions?.map((step: string, i: number) => (
+            <li key={i} className="leading-relaxed">{step}</li>
+          ))}
+        </ol>
       </div>
     </div>
   );
