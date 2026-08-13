@@ -29,7 +29,20 @@ export async function POST(req: Request) {
     let prep_time = 30;
     let category = 'Hauptgericht';
 
-    // 1. JSON-LD Extraktion (Zuverlässigste Methode für Cookidoo & Kochseiten)
+    // Wörter, die NIEMALS eine Zutat sein dürfen (Menü-Müll von Websites)
+    const blacklist = [
+      'für dich', 'entdecken', 'meine rezepte', 'meine woche', 'einkaufsliste', 
+      'abo vorteile', 'hilfe', 'registrieren', 'anmelden', 'konto', 'zurück', 
+      'suche', 'suchen', 'drucken', 'teilen', 'feedback', 'kontakt', 'impressum'
+    ];
+
+    const isValidIngredient = (text: string) => {
+      const lower = text.toLowerCase();
+      if (!text || text.length < 2 || text.length > 100) return false;
+      return !blacklist.some(badWord => lower.includes(badWord));
+    };
+
+    // 1. JSON-LD Extraktion
     $('script[type="application/ld+json"]').each((_, element) => {
       try {
         const jsonText = $(element).html();
@@ -46,7 +59,8 @@ export async function POST(req: Request) {
               image_url = typeof recipeObj.image === 'string' ? recipeObj.image : (Array.isArray(recipeObj.image) ? recipeObj.image[0] : recipeObj.image.url);
             }
             if (recipeObj.recipeIngredient) {
-              ingredients = Array.isArray(recipeObj.recipeIngredient) ? recipeObj.recipeIngredient : [recipeObj.recipeIngredient];
+              const rawIngs = Array.isArray(recipeObj.recipeIngredient) ? recipeObj.recipeIngredient : [recipeObj.recipeIngredient];
+              ingredients = rawIngs.map((i: string) => i.trim()).filter(isValidIngredient);
             }
             if (recipeObj.recipeInstructions) {
               instructions = recipeObj.recipeInstructions.map((step: any) => {
@@ -57,11 +71,11 @@ export async function POST(req: Request) {
           }
         }
       } catch (e) {
-        // Parser-Fehler bei ungültigem JSON ignorieren
+        // Fehler ignorieren
       }
     });
 
-    // 2. Fallback auf OpenGraph / Standard-Tags falls JSON-LD nicht reicht
+    // 2. Fallbacks falls JSON-LD nichts hergab
     if (!title) {
       title = $('h1').first().text().trim() || $('meta[property="og:title"]').attr('content') || 'Rezept';
     }
@@ -69,18 +83,13 @@ export async function POST(req: Request) {
       image_url = $('meta[property="og:image"]').attr('content') || '';
     }
 
-    // 3. HTML-Fallbacks spezifisch für Cookidoo und gängige Layouts
     if (ingredients.length === 0) {
-      $('.core-recipe-detail__ingredients-item, [itemprop="recipeIngredient"], .recipe-details__ingredient-item, li.ingredient').each((_, el) => {
+      // Spezifischere Cookidoo / allgemeine Selektoren
+      $('.core-recipe-detail__ingredients-item, [itemprop="recipeIngredient"], .recipe-details__ingredient-item, li.ingredient, .ingredient-row').each((_, el) => {
         const text = $(el).text().trim();
-        if (text) ingredients.push(text);
-      });
-    }
-
-    if (instructions.length === 0) {
-      $('.core-recipe-detail__instruction-step, [itemprop="instructions"], .recipe-details__instruction-step, ol li').each((_, el) => {
-        const text = $(el).text().trim();
-        if (text) instructions.push(text);
+        if (isValidIngredient(text) && !ingredients.includes(text)) {
+          ingredients.push(text);
+        }
       });
     }
 
@@ -89,7 +98,7 @@ export async function POST(req: Request) {
       image_url: image_url || 'https://images.unsplash.com/photo-1498837167922-ddd27525d352?w=600',
       prep_time,
       category,
-      ingredients: ingredients.length > 0 ? ingredients : ['1 Pck. Zutaten konnten nicht automatisch geladen werden'],
+      ingredients: ingredients.length > 0 ? ingredients : ['1 Pck. Bitte Zutaten manuell ergänzen'],
       instructions: instructions.length > 0 ? instructions : ['Bitte Anweisungen manuell ergänzen.'],
     });
   } catch (error) {
