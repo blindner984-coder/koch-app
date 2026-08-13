@@ -2,17 +2,18 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import Link from 'next/link';
 
-export default function NewRecipePage() {
+export default function NeuesRezeptPage() {
   const router = useRouter();
   const [url, setUrl] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [recipe, setRecipe] = useState<any>(null);
 
-  const handleImport = async (e: React.FormEvent) => {
+  const handleParse = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!url) return;
+
     setLoading(true);
     setError('');
 
@@ -23,76 +24,88 @@ export default function NewRecipePage() {
         body: JSON.stringify({ url }),
       });
 
-      let recipeData;
-      if (res.ok) {
-        recipeData = await res.json();
-      } else {
-        recipeData = {
-          id: 'recipe-' + Date.now(),
-          title: 'Importiertes Rezept',
-          category: 'Hauptgericht',
-          prep_time: 30,
-          image_url: 'https://images.unsplash.com/photo-1540420773420-3366772f4999?w=600',
-          ingredients: [{ name: 'Zutaten nach Anleitung', amountNeeded: '', unit: '' }],
-          instructions: ['Zutaten vorbereiten und nach Kochanleitung zubereiten.']
-        };
+      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data.error || 'Fehler beim Laden des Rezepts');
       }
 
-      const saved = JSON.parse(localStorage.getItem('savedKiRecipes') || '[]');
-      saved.push(recipeData);
-      localStorage.setItem('savedKiRecipes', JSON.stringify(saved));
-
-      router.push('/');
-    } catch (err) {
-      setError('Fehler beim Importieren. Bitte versuche es erneut.');
+      setRecipe(data);
+    } catch (err: any) {
+      setError(err.message || 'Ein Fehler ist aufgetreten.');
     } finally {
       setLoading(false);
     }
   };
 
+  const handleSave = () => {
+    if (!recipe) return;
+
+    // Eindeutige ID generieren, um /rezept/undefined zu verhindern
+    const recipeId = recipe.id || recipe.title
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/(^-|-$)/g, '') + '-' + Date.now();
+
+    const recipeToSave = {
+      ...recipe,
+      id: recipeId,
+    };
+
+    const existing = JSON.parse(localStorage.getItem('recipes') || '[]');
+    localStorage.setItem('recipes', JSON.stringify([recipeToSave, ...existing]));
+
+    router.push(`/rezept/${recipeId}`);
+  };
+
   return (
-    <main className="min-h-screen w-full bg-[#FAFAFC] text-slate-900 pb-32 overflow-x-hidden">
-      <nav className="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-slate-200/60">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 sm:h-20 flex items-center justify-between w-full">
-          <Link href="/" className="font-extrabold text-lg sm:text-xl tracking-tight text-slate-900">KochApp</Link>
-          <Link href="/" className="text-xs sm:text-sm font-semibold text-slate-600 hover:text-slate-900">← Zurück</Link>
+    <div className="max-w-2xl mx-auto p-6">
+      <h1 className="text-2xl font-bold mb-6">Neues Rezept importieren</h1>
+
+      <form onSubmit={handleParse} className="flex gap-2 mb-6">
+        <input
+          type="url"
+          placeholder="Rezept-URL eingeben (z.B. Cookidoo)..."
+          value={url}
+          onChange={(e) => setUrl(e.target.value)}
+          className="flex-1 border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          required
+        />
+        <button
+          type="submit"
+          disabled={loading}
+          className="bg-black text-white px-6 py-2 rounded-lg font-medium hover:bg-gray-800 disabled:opacity-50"
+        >
+          {loading ? 'Lade...' : 'Einlesen'}
+        </button>
+      </form>
+
+      {error && <p className="text-red-500 mb-4">{error}</p>}
+
+      {recipe && (
+        <div className="border rounded-xl p-6 shadow-sm bg-white">
+          <img
+            src={recipe.image_url}
+            alt={recipe.title}
+            className="w-full h-64 object-cover rounded-lg mb-4"
+          />
+          <h2 className="text-xl font-bold mb-2">{recipe.title}</h2>
+          <p className="text-gray-600 mb-4">Zubereitungszeit: ca. {recipe.prep_time} Minuten</p>
+
+          <h3 className="font-semibold mb-2">Zutaten ({recipe.ingredients.length}):</h3>
+          <ul className="list-disc list-inside mb-6 text-sm space-y-1">
+            {recipe.ingredients.map((ing: string, i: number) => (
+              <li key={i}>{ing}</li>
+            ))}
+          </ul>
+
+          <button
+            onClick={handleSave}
+            className="w-full bg-green-600 text-white py-3 rounded-xl font-medium hover:bg-green-700 transition-colors"
+          >
+            Rezept speichern & anzeigen
+          </button>
         </div>
-      </nav>
-
-      <div className="max-w-xl mx-auto px-4 sm:px-6 pt-8 sm:pt-16 w-full">
-        <div className="bg-white rounded-3xl border border-slate-200/80 p-6 sm:p-10 shadow-sm w-full">
-          <div className="text-center mb-6">
-            <span className="text-3xl sm:text-4xl mb-2 block">✨</span>
-            <h1 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">Magic Import</h1>
-            <p className="text-slate-500 text-xs sm:text-sm mt-2">
-              Füge einen Rezept-Link (z.B. von Cookidoo) ein. Die App erledigt den Rest!
-            </p>
-          </div>
-
-          <form onSubmit={handleImport} className="space-y-4">
-            <div>
-              <input
-                type="url"
-                required
-                placeholder="https://cookidoo.at/recipes/..."
-                value={url}
-                onChange={(e) => setUrl(e.target.value)}
-                className="w-full px-4 sm:px-5 py-3.5 sm:py-4 rounded-2xl border border-slate-200/90 outline-none focus:border-slate-900 text-slate-900 font-medium text-sm sm:text-base bg-slate-50/50"
-              />
-            </div>
-
-            {error && <p className="text-red-500 text-xs sm:text-sm font-medium text-center">{error}</p>}
-
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-3.5 sm:py-4 rounded-2xl transition-all shadow-md text-sm sm:text-base disabled:opacity-50"
-            >
-              {loading ? 'Analysiere Rezept...' : 'Rezept importieren ✨'}
-            </button>
-          </form>
-        </div>
-      </div>
-    </main>
+      )}
+    </div>
   );
 }
