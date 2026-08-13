@@ -30,26 +30,24 @@ export default function Home() {
     <main className="min-h-screen w-full max-w-[100vw] overflow-x-hidden bg-[#FAFAFC] text-slate-900 pb-32">
       
       <nav className="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-slate-200/60 w-full">
-        {/* 'relative' und 'lg:justify-start' sorgen für sauberes Layout */}
-        <div className="max-w-7xl mx-auto px-4 h-16 sm:h-20 flex items-center justify-between lg:justify-start w-full relative">
+        <div className="max-w-7xl mx-auto px-3 sm:px-4 h-16 sm:h-20 flex items-center justify-between lg:justify-start w-full relative gap-2">
           
-          <div className="flex items-center gap-3 shrink-0">
-            <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-slate-900 flex items-center justify-center shadow-md">
-              <span className="text-white text-base sm:text-lg font-black">K</span>
+          <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+            <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-slate-900 flex items-center justify-center shadow-md">
+              <span className="text-white text-sm sm:text-lg font-black">K</span>
             </div>
-            <span className="font-extrabold text-lg sm:text-xl tracking-tight text-slate-900">KochApp</span>
+            <span className="font-extrabold text-base sm:text-xl tracking-tight text-slate-900 hidden min-[380px]:block">KochApp</span>
           </div>
           
-          {/* Das Menü ist absolut mittig positioniert */}
-          <div className="hidden lg:flex items-center gap-3 absolute left-1/2 -translate-x-1/2">
-            <Link href="/neu" className="bg-slate-900 hover:bg-slate-800 text-white font-semibold px-5 py-2.5 rounded-2xl transition-all text-sm flex items-center gap-2">
-              <span>✨</span> Neues Rezept
+          <div className="flex items-center gap-1.5 sm:gap-3 w-full justify-end lg:w-auto lg:absolute lg:left-1/2 lg:-translate-x-1/2">
+            <Link href="/neu" className="shrink-0 bg-slate-900 hover:bg-slate-800 text-white font-semibold px-2.5 py-2 sm:px-5 sm:py-2.5 rounded-xl sm:rounded-2xl transition-all text-xs sm:text-sm flex items-center gap-1.5">
+              <span>✨</span> <span>Neu<span className="hidden sm:inline">es Rezept</span></span>
             </Link>
-            <Link href="/manuell" className="bg-white hover:bg-slate-50 text-slate-700 font-semibold px-5 py-2.5 rounded-2xl border border-slate-200/80 transition-all text-sm flex items-center gap-2">
-              <span>✍️</span> Manuelle Rezepte
+            <Link href="/manuell" className="shrink-0 bg-white hover:bg-slate-50 text-slate-700 font-semibold px-2.5 py-2 sm:px-5 sm:py-2.5 rounded-xl sm:rounded-2xl border border-slate-200/80 transition-all text-xs sm:text-sm flex items-center gap-1.5">
+              <span>✍️</span> <span>Manuell<span className="hidden sm:inline">e Rezepte</span></span>
             </Link>
-            <Link href="/einkaufsliste" className="bg-white hover:bg-slate-50 text-slate-700 font-semibold px-5 py-2.5 rounded-2xl border border-slate-200/80 transition-all text-sm flex items-center gap-2">
-              <span>🛒</span> Einkaufsliste
+            <Link href="/einkaufsliste" className="shrink-0 bg-white hover:bg-slate-50 text-slate-700 font-semibold px-2.5 py-2 sm:px-5 sm:py-2.5 rounded-xl sm:rounded-2xl border border-slate-200/80 transition-all text-xs sm:text-sm flex items-center gap-1.5">
+              <span>🛒</span> <span>Einkauf<span className="hidden sm:inline">sliste</span></span>
             </Link>
           </div>
         </div>
