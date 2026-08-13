@@ -20,7 +20,8 @@ export default function RecipeDetailPage() {
 
   useEffect(() => {
     const kiRecipes = JSON.parse(localStorage.getItem('savedKiRecipes') || '[]');
-    const combinedRecipes = [...allRecipes, ...kiRecipes];
+    const manualRecipes = JSON.parse(localStorage.getItem('manualRecipes') || '[]');
+    const combinedRecipes = [...allRecipes, ...kiRecipes, ...manualRecipes];
     
     const found = combinedRecipes.find((r) => r.id === id);
     if (found) {
@@ -81,13 +82,13 @@ export default function RecipeDetailPage() {
     setTimeout(() => setAddedToList(false), 3000);
   };
 
-  if (loading) return <div className="p-16 text-center text-xl font-bold text-gray-500">Lade Rezept... ⏳</div>;
+  if (loading) return <div className="p-16 text-center text-xl font-bold text-slate-500">Lade Rezept... ⏳</div>;
 
   if (!recipe) {
     return (
       <div className="p-16 text-center">
         <span className="text-5xl mb-4 block">🔍</span>
-        <h1 className="text-2xl font-bold text-gray-900 mb-4">Rezept nicht gefunden!</h1>
+        <h1 className="text-2xl font-bold text-slate-900 mb-4">Rezept nicht gefunden!</h1>
         <Link href="/" className="text-blue-500 hover:underline font-medium">← Zurück zur Übersicht</Link>
       </div>
     );
@@ -97,7 +98,7 @@ export default function RecipeDetailPage() {
 
   return (
     <div className="max-w-3xl mx-auto px-4 py-8 pb-32">
-      <Link href="/" className="text-gray-500 hover:text-gray-900 transition-colors mb-6 block font-medium">
+      <Link href="/" className="text-slate-500 hover:text-slate-900 transition-colors mb-6 block font-medium">
         ← Zurück zur Übersicht
       </Link>
       
@@ -108,13 +109,13 @@ export default function RecipeDetailPage() {
         className="w-full h-80 object-cover rounded-3xl mb-8 shadow-md" 
       />
       
-      <h1 className="text-4xl font-extrabold text-gray-900 mb-2">{recipe.title}</h1>
-      <p className="text-gray-500 font-medium mb-8">⏱️ Zubereitungszeit: ca. {recipe.prep_time} Minuten</p>
+      <h1 className="text-4xl font-extrabold text-slate-900 mb-2">{recipe.title}</h1>
+      <p className="text-slate-500 font-medium mb-8">⏱️ Zubereitungszeit: ca. {recipe.prep_time} Minuten</p>
       
-      <div className="bg-white p-6 rounded-3xl border border-gray-100 shadow-sm mb-8">
+      <div className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm mb-8">
         <div className="flex justify-between items-center mb-6">
-          <h2 className="text-2xl font-bold text-gray-900">Zutatenliste 🛒</h2>
-          <p className="text-sm text-gray-500 font-medium">Was fehlt noch?</p>
+          <h2 className="text-2xl font-bold text-slate-900">Zutatenliste 🛒</h2>
+          <p className="text-sm text-slate-500 font-medium">Was fehlt noch?</p>
         </div>
         
         <div className="space-y-2 mb-8">
@@ -125,16 +126,16 @@ export default function RecipeDetailPage() {
             return (
               <div 
                 key={uniqueKey} 
-                className={`flex flex-col sm:flex-row justify-between py-3 px-2 rounded-xl transition-colors ${state.selected ? 'hover:bg-gray-50' : 'opacity-60 bg-gray-50'}`}
+                className={`flex flex-col sm:flex-row justify-between py-3 px-2 rounded-xl transition-colors ${state.selected ? 'hover:bg-slate-50' : 'opacity-60 bg-slate-50'}`}
               >
                 <div 
                   className="flex items-center gap-4 cursor-pointer mb-2 sm:mb-0 flex-grow" 
                   onClick={() => toggleIngredient(uniqueKey)}
                 >
-                  <div className={`w-6 h-6 flex-shrink-0 rounded-md border-2 flex items-center justify-center transition-colors ${state.selected ? 'bg-gray-900 border-gray-900' : 'border-gray-300'}`}>
+                  <div className={`w-6 h-6 flex-shrink-0 rounded-md border-2 flex items-center justify-center transition-colors ${state.selected ? 'bg-slate-900 border-slate-900' : 'border-slate-300'}`}>
                     {state.selected && <span className="text-white text-sm font-bold">✓</span>}
                   </div>
-                  <span className={`font-medium ${state.selected ? 'text-gray-800' : 'text-gray-400 line-through'}`}>
+                  <span className={`font-medium ${state.selected ? 'text-slate-800' : 'text-slate-400 line-through'}`}>
                     {ing.name}
                   </span>
                 </div>
@@ -147,14 +148,14 @@ export default function RecipeDetailPage() {
                         step="any"
                         value={state.amount} 
                         onChange={(e) => updateAmount(uniqueKey, e.target.value)}
-                        className="w-16 p-1.5 text-center bg-white border border-gray-200 rounded-lg font-bold text-gray-900 outline-none focus:border-gray-900 focus:ring-1 focus:ring-gray-900 shadow-sm"
+                        className="w-16 p-1.5 text-center bg-white border border-slate-200 rounded-lg font-bold text-slate-900 outline-none focus:border-slate-900 focus:ring-1 focus:ring-slate-900 shadow-sm"
                       />
-                      <span className="text-gray-700 font-bold bg-gray-100 px-3 py-1.5 rounded-lg min-w-[3rem] text-center">
+                      <span className="text-slate-700 font-bold bg-slate-100 px-3 py-1.5 rounded-lg min-w-[3rem] text-center">
                         {ing.unit}
                       </span>
                     </>
                   ) : (
-                    <span className="text-gray-400 font-medium bg-transparent px-3 py-1.5 rounded-lg line-through">
+                    <span className="text-slate-400 font-medium bg-transparent px-3 py-1.5 rounded-lg line-through">
                       {ing.amountNeeded} {ing.unit}
                     </span>
                   )}
@@ -169,7 +170,7 @@ export default function RecipeDetailPage() {
           className={`w-full py-4 rounded-xl font-bold text-lg transition-all shadow-md ${
             addedToList 
               ? 'bg-green-500 hover:bg-green-600 text-white' 
-              : 'bg-gray-900 hover:bg-gray-800 text-white'
+              : 'bg-slate-900 hover:bg-slate-800 text-white'
           }`}
         >
           {addedToList 
@@ -178,22 +179,22 @@ export default function RecipeDetailPage() {
         </button>
       </div>
 
-      <div className="bg-gray-900 text-white p-6 md:p-8 rounded-3xl shadow-md">
+      <div className="bg-slate-900 text-white p-6 md:p-8 rounded-3xl shadow-md">
         <h2 className="text-2xl font-bold mb-6">Zubereitung 👨‍🍳</h2>
         
         {recipe.instructions && recipe.instructions.length > 0 ? (
           <ol className="space-y-6">
             {recipe.instructions.map((step: string, index: number) => (
               <li key={index} className="flex gap-4">
-                <span className="flex-shrink-0 w-8 h-8 rounded-full bg-white text-gray-900 flex items-center justify-center font-bold shadow-sm">
+                <span className="flex-shrink-0 w-8 h-8 rounded-full bg-white text-slate-900 flex items-center justify-center font-bold shadow-sm">
                   {index + 1}
                 </span>
-                <p className="pt-1 leading-relaxed text-gray-100">{step}</p>
+                <p className="pt-1 leading-relaxed text-slate-100">{step}</p>
               </li>
             ))}
           </ol>
         ) : (
-          <p className="text-gray-400 italic">Keine Zubereitungsschritte hinterlegt.</p>
+          <p className="text-slate-400 italic">Keine Zubereitungsschritte hinterlegt.</p>
         )}
       </div>
     </div>
