@@ -21,9 +21,9 @@ export default function Home() {
 
   const categories = ['Alle', 'Klassiker', 'Suppe', 'Pasta', 'Auflauf', 'Hauptgericht', 'Fisch', 'Salat', 'Vegetarisch', 'Dessert', 'Backen'];
 
-  // Feste, zu 100% funktionierende Direkt-Zuordnung nach Rezept-ID oder Name
-  const getDirectImageUrl = (recipe: Recipe) => {
-    const id = recipe.id || '';
+  // Zu 100% funktionierende Bild-URLs direkt per Mapping
+  const getImageForRecipe = (recipe: Recipe) => {
+    const id = (recipe.id || '').toLowerCase();
     const title = (recipe.title || '').toLowerCase();
 
     if (id.includes('spaghetti') || title.includes('spaghetti') || title.includes('bolognese')) {
@@ -60,7 +60,9 @@ export default function Home() {
       return 'https://images.unsplash.com/photo-1540420773420-3366772f4999?w=600';
     }
 
-    return 'https://images.unsplash.com/photo-1498837167922-ddd27525d352?w=600';
+    return recipe.image_url && recipe.image_url.startsWith('http') 
+      ? recipe.image_url 
+      : 'https://images.unsplash.com/photo-1498837167922-ddd27525d352?w=600';
   };
 
   const filteredRecipes = combinedRecipes.filter((recipe) => {
@@ -168,7 +170,7 @@ export default function Home() {
               const isManual = manualRecipes.some((m) => m.id === recipe.id);
               const isKi = kiRecipes.some((k) => k.id === recipe.id);
               const badgeText = isManual ? '✍️ Manuell' : isKi ? '⭐ Gespeichert' : (recipe.category || 'Rezept');
-              const finalImg = getDirectImageUrl(recipe);
+              const imageUrl = getImageForRecipe(recipe);
 
               return (
                 <Link 
@@ -176,10 +178,12 @@ export default function Home() {
                   key={recipe.id}
                   className="group bg-white rounded-3xl border border-slate-200/70 overflow-hidden shadow-sm hover:shadow-xl transition-all duration-500 hover:-translate-y-1.5 flex flex-col"
                 >
-                  <div 
-                    className="relative h-56 w-full bg-cover bg-center transition-transform duration-700 ease-out group-hover:scale-105"
-                    style={{ backgroundImage: `url("${finalImg}")` }}
-                  >
+                  <div className="relative h-56 w-full overflow-hidden bg-slate-100">
+                    <img 
+                      src={imageUrl} 
+                      alt={recipe.title} 
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
+                    />
                     <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-md px-3 py-1.5 rounded-full text-xs font-bold text-slate-800 shadow-sm border border-white/20 z-10">
                       {badgeText}
                     </div>
