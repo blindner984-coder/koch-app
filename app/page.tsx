@@ -30,7 +30,9 @@ export default function Home() {
     <main className="min-h-screen w-full max-w-[100vw] overflow-x-hidden bg-[#FAFAFC] text-slate-900 pb-32">
       
       <nav className="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-slate-200/60 w-full">
-        <div className="max-w-7xl mx-auto px-4 h-16 sm:h-20 flex items-center justify-between w-full">
+        {/* 'relative' und 'lg:justify-start' sorgen für sauberes Layout */}
+        <div className="max-w-7xl mx-auto px-4 h-16 sm:h-20 flex items-center justify-between lg:justify-start w-full relative">
+          
           <div className="flex items-center gap-3 shrink-0">
             <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-slate-900 flex items-center justify-center shadow-md">
               <span className="text-white text-base sm:text-lg font-black">K</span>
@@ -38,7 +40,8 @@ export default function Home() {
             <span className="font-extrabold text-lg sm:text-xl tracking-tight text-slate-900">KochApp</span>
           </div>
           
-          <div className="hidden lg:flex items-center gap-3">
+          {/* Das Menü ist absolut mittig positioniert */}
+          <div className="hidden lg:flex items-center gap-3 absolute left-1/2 -translate-x-1/2">
             <Link href="/neu" className="bg-slate-900 hover:bg-slate-800 text-white font-semibold px-5 py-2.5 rounded-2xl transition-all text-sm flex items-center gap-2">
               <span>✨</span> Neues Rezept
             </Link>
