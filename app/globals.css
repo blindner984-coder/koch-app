@@ -2,7 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Erlaubt uns, Scrollbars in Menüs unsichtbar zu machen, ohne die Funktion zu stören */
 @layer utilities {
   .no-scrollbar::-webkit-scrollbar {
     display: none;
