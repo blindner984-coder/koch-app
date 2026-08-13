@@ -9,7 +9,6 @@ export default function Home() {
   const [selectedCategory, setSelectedCategory] = useState('Alle');
   const [kiRecipes, setKiRecipes] = useState<Recipe[]>([]);
   const [manualRecipes, setManualRecipes] = useState<Recipe[]>([]);
-  const [failedImages, setFailedImages] = useState<Record<string, boolean>>({});
 
   useEffect(() => {
     const savedKi = JSON.parse(localStorage.getItem('savedKiRecipes') || '[]');
@@ -22,32 +21,24 @@ export default function Home() {
 
   const categories = ['Alle', 'Klassiker', 'Suppe', 'Pasta', 'Auflauf', 'Hauptgericht', 'Fisch', 'Salat', 'Vegetarisch', 'Dessert', 'Backen'];
 
-  // Präzise Bild-Zuweisung für jedes Gericht
-  const getSmartImageUrl = (recipe: Recipe) => {
-    if (failedImages[recipe.id]) {
-      return 'https://images.unsplash.com/photo-1498837167922-ddd27525d352?w=600';
-    }
-
-    const titleLower = recipe.title.toLowerCase();
-
-    // Exakte Treffer für Problemkinder
-    if (titleLower.includes('spaghetti bolognese') || titleLower.includes('bolognese')) {
-      return 'https://images.unsplash.com/photo-1621996346565-e3d5d6281229?w=600';
-    }
-    if (titleLower.includes('hähnchen-frikassee') || titleLower.includes('frikassee')) {
-      return 'https://images.unsplash.com/photo-1604908176997-125f2596f3a8?w=600';
-    }
-
+  // 100% Automatische KI-Bild-Erkennung anhand des Rezeptnamens
+  const getAutomaticImageUrl = (recipe: Recipe) => {
     const text = (recipe.title + ' ' + (recipe.category || '')).toLowerCase();
 
+    if (text.includes('spaghetti') || text.includes('bolognese') || text.includes('pasta') || text.includes('nudel')) {
+      return 'https://images.unsplash.com/photo-1621996346565-e3d5d6281229?w=600';
+    }
+    if (text.includes('frikassee') || text.includes('hähnchen') || text.includes('hahn') || text.includes('chicken')) {
+      return 'https://images.unsplash.com/photo-1604908176997-125f2596f3a8?w=600';
+    }
+    if (text.includes('kartoffel') || text.includes('püree') || text.includes('brei')) {
+      return 'https://images.unsplash.com/photo-1518977676601-b5ff82803c43?w=600';
+    }
     if (text.includes('suppe') || text.includes('soup')) {
       return 'https://images.unsplash.com/photo-1547592166-23ac45744acd?w=600';
     }
     if (text.includes('kuchen') || text.includes('torte') || text.includes('backen') || text.includes('brownie') || text.includes('muffin')) {
       return 'https://images.unsplash.com/photo-1606313564200-e75d5e30476c?w=600';
-    }
-    if (text.includes('pasta') || text.includes('nudel') || text.includes('penne')) {
-      return 'https://images.unsplash.com/photo-1551183053-bf91a1d81141?w=600';
     }
     if (text.includes('pizza')) {
       return 'https://images.unsplash.com/photo-1513104890138-7c749659a591?w=600';
@@ -70,13 +61,9 @@ export default function Home() {
     if (text.includes('fisch') || text.includes('lachs')) {
       return 'https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?w=600';
     }
-    if (text.includes('kartoffel')) {
-      return 'https://images.unsplash.com/photo-1518977676601-b5ff82803c43?w=600';
-    }
 
-    return recipe.image_url && recipe.image_url.startsWith('http') 
-      ? recipe.image_url 
-      : 'https://images.unsplash.com/photo-1498837167922-ddd27525d352?w=600';
+    // Universeller Fallback für alles andere
+    return 'https://images.unsplash.com/photo-1498837167922-ddd27525d352?w=600';
   };
 
   const filteredRecipes = combinedRecipes.filter((recipe) => {
@@ -184,7 +171,7 @@ export default function Home() {
               const isManual = manualRecipes.some((m) => m.id === recipe.id);
               const isKi = kiRecipes.some((k) => k.id === recipe.id);
               const badgeText = isManual ? '✍️ Manuell' : isKi ? '⭐ Gespeichert' : (recipe.category || 'Rezept');
-              const imageUrl = getSmartImageUrl(recipe);
+              const imageUrl = getAutomaticImageUrl(recipe);
 
               return (
                 <Link 
@@ -196,7 +183,6 @@ export default function Home() {
                     <img 
                       src={imageUrl} 
                       alt={recipe.title} 
-                      onError={() => setFailedImages(prev => ({ ...prev, [recipe.id]: true }))}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
                     />
                     <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-md px-3 py-1.5 rounded-full text-xs font-bold text-slate-800 shadow-sm border border-white/20 z-10">
