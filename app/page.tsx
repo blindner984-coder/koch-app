@@ -9,6 +9,7 @@ export default function Home() {
   const [selectedCategory, setSelectedCategory] = useState('Alle');
   const [kiRecipes, setKiRecipes] = useState<Recipe[]>([]);
   const [manualRecipes, setManualRecipes] = useState<Recipe[]>([]);
+  const [failedImages, setFailedImages] = useState<Record<string, boolean>>({});
 
   useEffect(() => {
     const savedKi = JSON.parse(localStorage.getItem('savedKiRecipes') || '[]');
@@ -21,22 +22,48 @@ export default function Home() {
 
   const categories = ['Alle', 'Klassiker', 'Suppe', 'Pasta', 'Auflauf', 'Hauptgericht', 'Fisch', 'Salat', 'Vegetarisch', 'Dessert', 'Backen'];
 
-  // Intelligente Funktion: Erkennt anhand des Namens / der Kategorie das perfekte Foto
+  // Intelligente Bild-Erkennung mit spezifischen Keywords für perfekte Treffer
   const getSmartImageUrl = (recipe: Recipe) => {
+    if (failedImages[recipe.id]) {
+      return 'https://images.unsplash.com/photo-1498837167922-ddd27525d352?w=600';
+    }
+
     const text = (recipe.title + ' ' + (recipe.category || '')).toLowerCase();
 
-    if (text.includes('suppe') || text.includes('soup')) return 'https://images.unsplash.com/photo-1547592166-23ac45744acd?w=600';
-    if (text.includes('kuchen') || text.includes('torte') || text.includes('backen') || text.includes('brownie') || text.includes('muffin')) return 'https://images.unsplash.com/photo-1606313564200-e75d5e30476c?w=600';
-    if (text.includes('pasta') || text.includes('spaghetti') || text.includes('nudel') || text.includes('penne')) return 'https://images.unsplash.com/photo-1621996346565-e3d5d6281229?w=600';
-    if (text.includes('pizza')) return 'https://images.unsplash.com/photo-1513104890138-7c749659a591?w=600';
-    if (text.includes('eis') || text.includes('dessert') || text.includes('süß') || text.includes('tiramisu')) return 'https://images.unsplash.com/photo-1488477181946-6428a0291777?w=600';
-    if (text.includes('risotto') || text.includes('reis')) return 'https://images.unsplash.com/photo-1633964913295-ceb43826e7c9?w=600';
-    if (text.includes('curry')) return 'https://images.unsplash.com/photo-1455619452474-d2be8b1e70cd?w=600';
-    if (text.includes('gulasch') || text.includes('fleisch') || text.includes('braten') || text.includes('steak')) return 'https://images.unsplash.com/photo-1534939561126-855b8675edd7?w=600';
-    if (text.includes('salat') || text.includes('brokkoli')) return 'https://images.unsplash.com/photo-1540420773420-3366772f4999?w=600';
-    if (text.includes('fisch') || text.includes('lachs')) return 'https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?w=600';
+    if (text.includes('frikassee') || text.includes('hähnchen') || text.includes('hahn') || text.includes('chicken')) {
+      return 'https://images.unsplash.com/photo-1604908176997-125f2596f3a8?w=600';
+    }
+    if (text.includes('suppe') || text.includes('soup')) {
+      return 'https://images.unsplash.com/photo-1547592166-23ac45744acd?w=600';
+    }
+    if (text.includes('kuchen') || text.includes('torte') || text.includes('backen') || text.includes('brownie') || text.includes('muffin')) {
+      return 'https://images.unsplash.com/photo-1606313564200-e75d5e30476c?w=600';
+    }
+    if (text.includes('pasta') || text.includes('spaghetti') || text.includes('nudel') || text.includes('penne') || text.includes('bolognese')) {
+      return 'https://images.unsplash.com/photo-1621996346565-e3d5d6281229?w=600';
+    }
+    if (text.includes('pizza')) {
+      return 'https://images.unsplash.com/photo-1513104890138-7c749659a591?w=600';
+    }
+    if (text.includes('eis') || text.includes('dessert') || text.includes('süß') || text.includes('tiramisu')) {
+      return 'https://images.unsplash.com/photo-1488477181946-6428a0291777?w=600';
+    }
+    if (text.includes('risotto')) {
+      return 'https://images.unsplash.com/photo-1633964913295-ceb43826e7c9?w=600';
+    }
+    if (text.includes('curry')) {
+      return 'https://images.unsplash.com/photo-1455619452474-d2be8b1e70cd?w=600';
+    }
+    if (text.includes('gulasch') || text.includes('fleisch') || text.includes('braten') || text.includes('steak')) {
+      return 'https://images.unsplash.com/photo-1534939561126-855b8675edd7?w=600';
+    }
+    if (text.includes('salat') || text.includes('brokkoli')) {
+      return 'https://images.unsplash.com/photo-1540420773420-3366772f4999?w=600';
+    }
+    if (text.includes('fisch') || text.includes('lachs')) {
+      return 'https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?w=600';
+    }
 
-    // Falls ein Bild angegeben wurde und valide ist, nutze es, ansonsten ein schönes Standard-Kochbild
     return recipe.image_url && recipe.image_url.startsWith('http') 
       ? recipe.image_url 
       : 'https://images.unsplash.com/photo-1498837167922-ddd27525d352?w=600';
@@ -159,6 +186,7 @@ export default function Home() {
                     <img 
                       src={imageUrl} 
                       alt={recipe.title} 
+                      onError={() => setFailedImages(prev => ({ ...prev, [recipe.id]: true }))}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
                     />
                     <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-md px-3 py-1.5 rounded-full text-xs font-bold text-slate-800 shadow-sm border border-white/20 z-10">
