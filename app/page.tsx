@@ -9,8 +9,16 @@ export default function Home() {
   const [selectedCategory, setSelectedCategory] = useState('Alle');
 
   useEffect(() => {
-    const loaded = JSON.parse(localStorage.getItem('recipes') || '[]');
-    // Standard-Rezepte falls noch keine da sind
+    const rawLoaded = JSON.parse(localStorage.getItem('recipes') || '[]');
+    
+    // Rezepte bereinigen und fehlende/undefined IDs automatisch reparieren
+    const loaded = rawLoaded.map((r: any, index: number) => {
+      const validId = r.id && r.id !== 'undefined' 
+        ? r.id 
+        : (r.title ? r.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') + '-' + index : 'rezept-' + index);
+      return { ...r, id: validId };
+    });
+
     if (loaded.length === 0) {
       const defaultRecipes = [
         {
@@ -26,6 +34,7 @@ export default function Home() {
       localStorage.setItem('recipes', JSON.stringify(defaultRecipes));
       setRecipes(defaultRecipes);
     } else {
+      localStorage.setItem('recipes', JSON.stringify(loaded));
       setRecipes(loaded);
     }
   }, []);
