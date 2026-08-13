@@ -9,6 +9,7 @@ export default function Home() {
   const [selectedCategory, setSelectedCategory] = useState('Alle');
   const [kiRecipes, setKiRecipes] = useState<Recipe[]>([]);
   const [manualRecipes, setManualRecipes] = useState<Recipe[]>([]);
+  const [imageErrors, setImageErrors] = useState<Record<string, boolean>>({});
 
   useEffect(() => {
     const savedKi = JSON.parse(localStorage.getItem('savedKiRecipes') || '[]');
@@ -26,6 +27,10 @@ export default function Home() {
     const matchesCategory = selectedCategory === 'Alle' || recipe.category === selectedCategory;
     return matchesSearch && matchesCategory;
   });
+
+  const handleImageError = (id: string) => {
+    setImageErrors(prev => ({ ...prev, [id]: true }));
+  };
 
   return (
     <main className="min-h-screen bg-[#FAFAFC] text-slate-900 selection:bg-slate-900 selection:text-white pb-32">
@@ -126,21 +131,29 @@ export default function Home() {
               const isManual = manualRecipes.some((m) => m.id === recipe.id);
               const isKi = kiRecipes.some((k) => k.id === recipe.id);
               const badgeText = isManual ? '✍️ Manuell' : isKi ? '⭐ Gespeichert' : (recipe.category || 'Rezept');
-              
+              const hasError = imageErrors[recipe.id];
+
               return (
                 <Link 
                   href={`/rezept/${recipe.id}`} 
                   key={recipe.id}
                   className="group bg-white rounded-3xl border border-slate-200/70 overflow-hidden shadow-sm hover:shadow-xl transition-all duration-500 hover:-translate-y-1.5 flex flex-col"
                 >
-                  <div className="relative h-56 overflow-hidden bg-slate-100">
-                    <img 
-                      src={recipe.image_url || 'https://images.unsplash.com/photo-1498837167922-ddd27525d352?w=600'} 
-                      alt={recipe.title} 
-                      onError={(e) => { (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1498837167922-ddd27525d352?w=600'; }}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
-                    />
-                    <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-md px-3 py-1.5 rounded-full text-xs font-bold text-slate-800 shadow-sm border border-white/20">
+                  <div className="relative h-56 overflow-hidden bg-slate-100 flex items-center justify-center">
+                    {!hasError && recipe.image_url ? (
+                      <img 
+                        src={recipe.image_url} 
+                        alt={recipe.title} 
+                        onError={() => handleImageError(recipe.id)}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
+                      />
+                    ) : (
+                      <div className="w-full h-full bg-gradient-to-br from-slate-100 to-slate-200 flex flex-col items-center justify-center text-slate-400 group-hover:scale-105 transition-transform duration-700">
+                        <span className="text-4xl mb-2">🍲</span>
+                        <span className="text-xs font-bold uppercase tracking-wider text-slate-500">KochApp</span>
+                      </div>
+                    )}
+                    <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-md px-3 py-1.5 rounded-full text-xs font-bold text-slate-800 shadow-sm border border-white/20 z-10">
                       {badgeText}
                     </div>
                   </div>
