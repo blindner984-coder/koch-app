@@ -22,36 +22,43 @@ export default function Home() {
 
   const categories = ['Alle', 'Klassiker', 'Suppe', 'Pasta', 'Auflauf', 'Hauptgericht', 'Fisch', 'Salat', 'Vegetarisch', 'Dessert', 'Backen'];
 
-  // Intelligente Bild-Erkennung mit spezifischen Keywords für perfekte Treffer
+  // Präzise Bild-Zuweisung für jedes Gericht
   const getSmartImageUrl = (recipe: Recipe) => {
     if (failedImages[recipe.id]) {
       return 'https://images.unsplash.com/photo-1498837167922-ddd27525d352?w=600';
     }
 
-    const text = (recipe.title + ' ' + (recipe.category || '')).toLowerCase();
+    const titleLower = recipe.title.toLowerCase();
 
-    if (text.includes('frikassee') || text.includes('hähnchen') || text.includes('hahn') || text.includes('chicken')) {
+    // Exakte Treffer für Problemkinder
+    if (titleLower.includes('spaghetti bolognese') || titleLower.includes('bolognese')) {
+      return 'https://images.unsplash.com/photo-1621996346565-e3d5d6281229?w=600';
+    }
+    if (titleLower.includes('hähnchen-frikassee') || titleLower.includes('frikassee')) {
       return 'https://images.unsplash.com/photo-1604908176997-125f2596f3a8?w=600';
     }
+
+    const text = (recipe.title + ' ' + (recipe.category || '')).toLowerCase();
+
     if (text.includes('suppe') || text.includes('soup')) {
       return 'https://images.unsplash.com/photo-1547592166-23ac45744acd?w=600';
     }
     if (text.includes('kuchen') || text.includes('torte') || text.includes('backen') || text.includes('brownie') || text.includes('muffin')) {
       return 'https://images.unsplash.com/photo-1606313564200-e75d5e30476c?w=600';
     }
-    if (text.includes('pasta') || text.includes('spaghetti') || text.includes('nudel') || text.includes('penne') || text.includes('bolognese')) {
-      return 'https://images.unsplash.com/photo-1621996346565-e3d5d6281229?w=600';
+    if (text.includes('pasta') || text.includes('nudel') || text.includes('penne')) {
+      return 'https://images.unsplash.com/photo-1551183053-bf91a1d81141?w=600';
     }
     if (text.includes('pizza')) {
       return 'https://images.unsplash.com/photo-1513104890138-7c749659a591?w=600';
     }
-    if (text.includes('eis') || text.includes('dessert') || text.includes('süß') || text.includes('tiramisu')) {
+    if (text.includes('eis') || text.includes('milchreis') || text.includes('dessert') || text.includes('süß') || text.includes('tiramisu')) {
       return 'https://images.unsplash.com/photo-1488477181946-6428a0291777?w=600';
     }
-    if (text.includes('risotto')) {
+    if (text.includes('risotto') || text.includes('reis')) {
       return 'https://images.unsplash.com/photo-1633964913295-ceb43826e7c9?w=600';
     }
-    if (text.includes('curry')) {
+    if (text.includes('curry') || text.includes('dip')) {
       return 'https://images.unsplash.com/photo-1455619452474-d2be8b1e70cd?w=600';
     }
     if (text.includes('gulasch') || text.includes('fleisch') || text.includes('braten') || text.includes('steak')) {
@@ -62,6 +69,9 @@ export default function Home() {
     }
     if (text.includes('fisch') || text.includes('lachs')) {
       return 'https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?w=600';
+    }
+    if (text.includes('kartoffel')) {
+      return 'https://images.unsplash.com/photo-1518977676601-b5ff82803c43?w=600';
     }
 
     return recipe.image_url && recipe.image_url.startsWith('http') 
