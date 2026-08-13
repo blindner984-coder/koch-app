@@ -27,8 +27,7 @@ export default function RecipeDetailPage() {
       setRecipe(found);
       
       const initialStates: Record<string, IngredientState> = {};
-      found.ingredients?.forEach((ing, index) => {
-        // Eindeutiger Schlüssel aus Rezept-ID und Index
+      found.ingredients?.forEach((ing: any, index: number) => {
         const uniqueKey = `${found.id}-ing-${index}`;
         initialStates[uniqueKey] = { selected: true, amount: ing.amountNeeded };
       });
@@ -57,12 +56,12 @@ export default function RecipeDetailPage() {
     const currentList = JSON.parse(localStorage.getItem('shoppingList') || '[]');
 
     const itemsToAdd = recipe.ingredients
-      .map((ing, index) => {
+      .map((ing: any, index: number) => {
         const uniqueKey = `${recipe.id}-ing-${index}`;
         return { ing, uniqueKey, state: ingStates[uniqueKey] };
       })
-      .filter(item => item.state?.selected)
-      .map(item => ({
+      .filter((item: any) => item.state?.selected)
+      .map((item: any) => ({
         id: 'item-' + Date.now() + '-' + Math.random().toString(36).substr(2, 5),
         name: item.ing.name,
         amount: item.state.amount,
@@ -94,7 +93,7 @@ export default function RecipeDetailPage() {
     );
   }
 
-  const selectedCount = Object.values(ingStates).filter(state => state?.selected).length;
+  const selectedCount = Object.values(ingStates).filter((state: any) => state?.selected).length;
 
   return (
     <div className="max-w-3xl mx-auto px-4 py-8 pb-32">
@@ -119,7 +118,7 @@ export default function RecipeDetailPage() {
         </div>
         
         <div className="space-y-2 mb-8">
-          {recipe.ingredients?.map((ing, index) => {
+          {recipe.ingredients?.map((ing: any, index: number) => {
             const uniqueKey = `${recipe.id}-ing-${index}`;
             const state = ingStates[uniqueKey] || { selected: true, amount: ing.amountNeeded };
             
@@ -184,7 +183,7 @@ export default function RecipeDetailPage() {
         
         {recipe.instructions && recipe.instructions.length > 0 ? (
           <ol className="space-y-6">
-            {recipe.instructions.map((step, index) => (
+            {recipe.instructions.map((step: string, index: number) => (
               <li key={index} className="flex gap-4">
                 <span className="flex-shrink-0 w-8 h-8 rounded-full bg-white text-gray-900 flex items-center justify-center font-bold shadow-sm">
                   {index + 1}
